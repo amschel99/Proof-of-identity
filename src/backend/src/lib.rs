@@ -5,12 +5,13 @@ use ic_stable_structures::{
 };
 
 use onnx::{setup, BoundingBox, Embedding, Person};
+use signatures::generate_label;
 use std::cell::RefCell;
 
 mod benchmarking;
 mod onnx;
 mod storage;
-
+mod signatures;
 
 // WASI polyfill requires a virtual stable memory to store the file system.
 // You can replace `0` with any index up to `254`.
@@ -27,13 +28,13 @@ thread_local! {
 }
 
 /// An error that is returned to the front-end.
-#[derive(CandidType, Deserialize)]
+#[derive(CandidType, Deserialize,Debug)]
 struct Error {
     message: String,
 }
 
 /// The result of the face detection endpoint.
-#[derive(CandidType, Deserialize)]
+#[derive(CandidType, Deserialize,Debug)]
 enum Detection {
     Ok(BoundingBox),
     Err(Error),
@@ -47,7 +48,7 @@ enum Addition {
 }
 
 /// The result of the face recognition endpoint.
-#[derive(CandidType, Deserialize)]
+#[derive(CandidType, Deserialize,Debug)]
 enum Recognition {
     Ok(Person),
     Err(Error),
@@ -57,7 +58,10 @@ enum Recognition {
 #[ic_cdk::query]
 fn detect(image: Vec<u8>) -> Detection {
     let result = match onnx::detect(image) {
-        Ok(result) => Detection::Ok(result.0),
+        Ok(result) =>{
+ic_cdk::println!("{:?}", result);
+ Detection::Ok(result.0)
+        },
         Err(err) => Detection::Err(Error {
             message: err.to_string(),
         }),
@@ -71,7 +75,10 @@ fn detect(image: Vec<u8>) -> Detection {
 #[ic_cdk::update]
 fn recognize(image: Vec<u8>) -> Recognition {
     let result = match onnx::recognize(image) {
-        Ok(result) => Recognition::Ok(result),
+        Ok(result) => {
+            ic_cdk::println!("{:?}", result);
+            Recognition::Ok(result)
+        },
         Err(err) => Recognition::Err(Error {
             message: err.to_string(),
         }),
@@ -84,7 +91,11 @@ fn recognize(image: Vec<u8>) -> Recognition {
 /// Adds a person with the given name (label) and face (image) for future
 /// face recognition requests.
 #[ic_cdk::update]
-fn add(label: String, image: Vec<u8>) -> Addition {
+fn add(image: Vec<u8>) -> Addition {
+
+    //random 256 bit string 
+    let label=generate_label();
+
     let result = match onnx::add(label, image) {
         Ok(result) => Addition::Ok(result),
         Err(err) => Addition::Err(Error {
@@ -110,6 +121,7 @@ fn clear_face_recognition_model_bytes() {
 
 /// Appends the given chunk to the face detection model file.
 /// This is used for incremental chunk uploading of large files.
+/// 
 #[ic_cdk::update]
 fn append_face_detection_model_bytes(bytes: Vec<u8>) {
     storage::append_bytes(FACE_DETECTION_FILE, bytes);

@@ -18,7 +18,7 @@ thread_local! {
     static DB: RefCell<Vec<(String, Embedding)>> = RefCell::new(vec![]);
 }
 
-#[derive(CandidType, Deserialize, Clone)]
+#[derive(CandidType, Deserialize, Clone,Debug)]
 pub struct BoundingBox {
     left: f32,
     top: f32,
@@ -54,7 +54,7 @@ impl Embedding {
     }
 }
 
-#[derive(CandidType, Deserialize)]
+#[derive(CandidType, Deserialize,Debug)]
 pub struct Person {
     label: String,
     score: f32,
