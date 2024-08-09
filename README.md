@@ -1,13 +1,11 @@
-# ICP Face Recognition
+# Proof of Identity system with face biometrics
 
-This is an ICP smart contract runs face detection and face recognition of user's photo that can be uploaded either from a camera or a local file.
 
-The smart contract consists of two canisters:
 
 - the backend canister embeds the [the Tract ONNX inference engine](https://github.com/sonos/tract) with two ONNX models. One model is used to detect a face in the photo and return its bounding box. Another model is used for computing face embeddings.
-- the frontend canister contains the Web assets such as HTML, JS, CSS that are served to the browser.
 
-# Models
+
+# AI  Models
 
 The smart contract uses two models: one for detecting the face and another for recognizing the face.
 

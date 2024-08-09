@@ -17,6 +17,8 @@ export interface Error { 'message' : string }
 export interface Person { 'label' : string, 'score' : number }
 export type Recognition = { 'Ok' : Person } |
   { 'Err' : Error };
+export type Result = { 'Ok' : null } |
+  { 'Err' : string };
 export interface _SERVICE {
   'add' : ActorMethod<[string, Uint8Array | number[]], Addition>,
   'append_face_detection_model_bytes' : ActorMethod<
@@ -33,7 +35,7 @@ export interface _SERVICE {
   'recognize' : ActorMethod<[Uint8Array | number[]], Recognition>,
   'run_detection' : ActorMethod<[], Detection>,
   'run_recognition' : ActorMethod<[], Recognition>,
-  'setup_models' : ActorMethod<[], undefined>,
+  'setup_models' : ActorMethod<[], Result>,
 }
 export declare const idlFactory: IDL.InterfaceFactory;
 export declare const init: (args: { IDL: typeof IDL }) => IDL.Type[];

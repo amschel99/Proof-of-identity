@@ -6,3 +6,5 @@ cargo build --release --target=wasm32-wasi
 wasi2ic ./target/wasm32-wasi/release/backend.wasm ./target/wasm32-wasi/release/backend-ic.wasm
 wasm-opt -Os --enable-simd --enable-bulk-memory   -o ./target/wasm32-wasi/release/backend-ic.wasm \
         ./target/wasm32-wasi/release/backend-ic.wasm
+
+  candid-extractor "./target/wasm32-wasi/release/backend-ic.wasm" > "src/backend/backend.did"

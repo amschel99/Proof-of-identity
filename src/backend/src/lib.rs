@@ -11,6 +11,7 @@ mod benchmarking;
 mod onnx;
 mod storage;
 
+
 // WASI polyfill requires a virtual stable memory to store the file system.
 // You can replace `0` with any index up to `254`.
 const WASI_MEMORY_ID: MemoryId = MemoryId::new(0);
@@ -78,6 +79,8 @@ fn recognize(image: Vec<u8>) -> Recognition {
     result
 }
 
+//give each person a unique 256 bit string to represent them
+
 /// Adds a person with the given name (label) and face (image) for future
 /// face recognition requests.
 #[ic_cdk::update]
@@ -141,3 +144,4 @@ fn post_upgrade() {
     let wasi_memory = MEMORY_MANAGER.with(|m| m.borrow().get(WASI_MEMORY_ID));
     ic_wasi_polyfill::init_with_memory(&[0u8; 32], &[], wasi_memory);
 }
+ic_cdk::export_candid!();

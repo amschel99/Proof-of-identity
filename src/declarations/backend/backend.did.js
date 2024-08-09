@@ -11,6 +11,7 @@ export const idlFactory = ({ IDL }) => {
   const Detection = IDL.Variant({ 'Ok' : BoundingBox, 'Err' : Error });
   const Person = IDL.Record({ 'label' : IDL.Text, 'score' : IDL.Float32 });
   const Recognition = IDL.Variant({ 'Ok' : Person, 'Err' : Error });
+  const Result = IDL.Variant({ 'Ok' : IDL.Null, 'Err' : IDL.Text });
   return IDL.Service({
     'add' : IDL.Func([IDL.Text, IDL.Vec(IDL.Nat8)], [Addition], []),
     'append_face_detection_model_bytes' : IDL.Func([IDL.Vec(IDL.Nat8)], [], []),
@@ -25,7 +26,7 @@ export const idlFactory = ({ IDL }) => {
     'recognize' : IDL.Func([IDL.Vec(IDL.Nat8)], [Recognition], []),
     'run_detection' : IDL.Func([], [Detection], ['query']),
     'run_recognition' : IDL.Func([], [Recognition], []),
-    'setup_models' : IDL.Func([], [], []),
+    'setup_models' : IDL.Func([], [Result], []),
   });
 };
 export const init = ({ IDL }) => { return []; };
