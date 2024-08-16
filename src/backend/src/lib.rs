@@ -6,6 +6,7 @@ use candid::{CandidType, Deserialize};
 
 use onnx::{setup, BoundingBox, Embedding, Person};
 use signatures::generate_label;
+use tract_onnx::tract_core::ops::identity;
 use std::cell::RefCell;
 use ic_stable_structures::{
     memory_manager::{MemoryId, MemoryManager, VirtualMemory},
@@ -107,6 +108,25 @@ fn recognize(image: Vec<u8>) -> Recognition {
 
 /// Adds a person with the given name (label) and face (image) for future
 /// face recognition requests.
+/// 
+#[ic_cdk::query]
+fn check_identity(identity: String) -> bool {
+    let identities: Vec<(u64, String)> = IDENTITIES.with(|storage| storage.borrow().iter().collect());
+
+    let mut identity_exists = false; 
+
+
+    for (_id, saved_identity) in identities {
+     
+        if identity == saved_identity {
+            identity_exists = true;
+            break; 
+        }
+    }
+
+    identity_exists 
+}
+
 #[ic_cdk::update]
 fn add(label:String, image: Vec<u8>) -> Addition {
 
