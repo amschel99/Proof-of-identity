@@ -5,7 +5,9 @@ use candid::{CandidType, Deserialize};
 
 
 use onnx::{setup, BoundingBox, Embedding, Person};
+use rand::{distributions::Alphanumeric, Rng};
 use signatures::generate_label;
+use tract_onnx::tract_core::ops::identity;
 use std::cell::RefCell;
 use ic_stable_structures::{
     memory_manager::{MemoryId, MemoryManager, VirtualMemory},
@@ -107,6 +109,44 @@ fn recognize(image: Vec<u8>) -> Recognition {
 
 /// Adds a person with the given name (label) and face (image) for future
 /// face recognition requests.
+/// 
+#[ic_cdk::query]
+fn check_identity(identity: String) -> bool {
+    let identities: Vec<(u64, String)> = IDENTITIES.with(|storage| storage.borrow().iter().collect());
+
+    let mut identity_exists = false; 
+
+
+    for (_id, saved_identity) in identities {
+     
+        if identity == saved_identity {
+            identity_exists = true;
+            break; 
+        }
+    }
+
+    identity_exists 
+}
+#[ic_cdk::query]
+fn challenge() -> String {
+    let mut rng = rand::thread_rng();
+    let word_length = rng.gen_range(3..=10); 
+
+    let word: String = rng
+        .sample_iter(&Alphanumeric)
+        .take(word_length)
+        .map(char::from)
+        .collect();
+
+    let mut chars = word.chars();
+    let first_char = chars.next().unwrap().to_ascii_uppercase();
+    let rest_of_word: String = chars.collect();
+    
+    format!("{}{}", first_char, rest_of_word)
+}
+
+
+
 #[ic_cdk::update]
 fn add(label:String, image: Vec<u8>) -> Addition {
 
