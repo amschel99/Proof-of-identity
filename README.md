@@ -1,103 +1,58 @@
-# Proof of Identity system with face biometrics
+# Proof of Identity System with Face Biometrics
 
+This project provides a Proof of Identity system using face biometrics, leveraging advanced face detection and recognition models.
 
+## Getting Started
 
-- the backend canister embeds the [the Tract ONNX inference engine](https://github.com/sonos/tract) with two ONNX models. One model is used to detect a face in the photo and return its bounding box. Another model is used for computing face embeddings.
+Follow these steps to set up the project locally:
 
+### 1. Download Face Detection Model
 
-# AI  Models
+Run the following script to download the face detection model:
 
-The smart contract uses two models: one for detecting the face and another for recognizing the face.
-
-## Face detection
-
-A face detection model finds the bounding box of a face in the image.
-You can download [Ultraface](https://github.com/onnx/models/tree/main/validated/vision/body_analysis/ultraface) - ultra-lightweight face detection model - [[here](https://github.com/onnx/models/blob/bec48b6a70e5e9042c0badbaafefe4454e072d08/validated/vision/body_analysis/ultraface/models/version-RFB-320.onnx)].
-
-Alternatively, you can run
-```
+```bash
 ./download-face-detection-model.sh
-```
-
-## Face recognition
-
-A face recognition model computes a vector embedding of an image with a face.
-You can obtain a pretrained model from [facenet-pytorch](https://github.com/timesler/facenet-pytorch) as follows.
-
-
-1. Install `python` and `pip`: https://packaging.python.org/en/latest/tutorials/installing-packages/.
-
-2. Install `facenet-pytorch` and  `torch`:
-```
-pip install facenet-pytorch
-pip install torch
-pip install onnx
-```
-
-3. Export ONNX model. Start a python shell and run the following commands or create a python file and run it:
-```
-import torch
-import facenet_pytorch
-resnet = facenet_pytorch.InceptionResnetV1(pretrained='vggface2').eval()
-input = torch.randn(1, 3, 160, 160)
-torch.onnx.export(resnet, input, "face-recognition.onnx", verbose=False, opset_version=11)
-```
-
-4. This should produce `face-recognition.onnx`. Copy the file to the root of this repository.
-
-# Dependencies
-
-Install `dfx`, Rust, etc: https://internetcomputer.org/docs/current/developer-docs/getting-started/hello-world
-
-Install `wasi2ic`:
-- Follow the steps in https://github.com/wasm-forge/wasi2ic
-- Make sure that `wasi2ic` binary is in your `$PATH`.
-
-Install NodeJS dependencies for the frontend:
 
 ```
-npm install
-```
 
-Install `wasm-opt`:
+### 2. Download Pretrained Face Recognition Model
 
-```
+Download the pretrained face recognition model from [this link](https://github.com/reorg-icp/Face-recognition-models/blob/master/face-recognition.onnx) and save it in the root directory as `face-recognition.onnx`.
+
+### 3. Install Required Tools
+
+Ensure you have the following tools installed:
+
+- **DFX**: The SDK for building, deploying, and running Internet Computer (IC) applications.
+- **Rust**: A systems programming language.
+
+### 4. Install `wasi2ic`
+
+Install `wasi2ic` by following the [instructions here](https://github.com/wasm-forge/wasi2ic).
+
+### 5. Install `wasm-opt`
+
+To optimize your WebAssembly modules, run:
+
+```bash
 cargo install wasm-opt
-```
-
-# Build
 
 ```
-dfx start --background
-dfx deploy
-```
 
-If the deployment is successful, the it will show the `frontend` URL.
-Open that URL in browser to interact with the smart contract.
+### 6. `dfx start --clean --background`
 
-# Chunk uploading of models
+### 7. `npm run deploy:local`
 
-Since the models are large, they cannot be embedded into the Wasm binary of the smart contract.
-Instead they should be uploaded separately.
-
-[DecideAI](https://decideai.xyz/) implemented a tool for incremental uploading of models: https://github.com/modclub-app/ic-file-uploader/tree/main.
-
-You can install the tool with
-
-```
-cargo install ic-file-uploader
-```
-
-Afterwards, execute the `upload-models-to-canister.sh` script, which runs the following commands:
-```
-dfx canister call backend clear_face_detection_model_bytes
+### 8.
+ ```    bash  dfx canister call backend clear_face_detection_model_bytes
 dfx canister call backend clear_face_recognition_model_bytes
 ic-file-uploader backend append_face_detection_model_bytes version-RFB-320.onnx
 ic-file-uploader backend append_face_recognition_model_bytes face-recognition.onnx
-dfx canister call backend setup_models
+dfx canister call backend setup_models  
+
 ```
 
-# Credits 
+#### Credits
 
-Thanks to [DecideAI](https://decideai.xyz/) for discussions and providing [ic-file-uploader](https://github.com/modclub-app/ic-file-uploader/tree/main).
+Thanks to Dfinity for providing the facial recognition template that runs fully onchain
 

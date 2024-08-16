@@ -1,17 +1,22 @@
+
+#[macro_use]
+extern crate serde;
 use candid::{CandidType, Deserialize};
-use ic_stable_structures::{
-    memory_manager::{MemoryId, MemoryManager},
-    DefaultMemoryImpl,
-};
+
 
 use onnx::{setup, BoundingBox, Embedding, Person};
 use signatures::generate_label;
 use std::cell::RefCell;
+use ic_stable_structures::{
+    memory_manager::{MemoryId, MemoryManager, VirtualMemory},
+    BTreeMap, Cell, DefaultMemoryImpl, Vec as VecStructure,
+};
 
 mod benchmarking;
 mod onnx;
 mod storage;
 mod signatures;
+mod lamport;
 
 // WASI polyfill requires a virtual stable memory to store the file system.
 // You can replace `0` with any index up to `254`.
@@ -20,11 +25,23 @@ const WASI_MEMORY_ID: MemoryId = MemoryId::new(0);
 // Files in the WASI filesystem (in the stable memory) that store the models.
 const FACE_DETECTION_FILE: &str = "face-detection.onnx";
 const FACE_RECOGNITION_FILE: &str = "face-recognition.onnx";
-
+//Memory implementations
+type Memory = VirtualMemory<DefaultMemoryImpl>;
+type IdCell = Cell<u64, Memory>;
 thread_local! {
     // The memory manager is used for simulating multiple memories.
     static MEMORY_MANAGER: RefCell<MemoryManager<DefaultMemoryImpl>> =
         RefCell::new(MemoryManager::init(DefaultMemoryImpl::default()));
+            static IDENTITIES: RefCell<BTreeMap<u64,String,Memory>> = RefCell::new(
+        BTreeMap::init(
+            MEMORY_MANAGER.with(|m| m.borrow().get(MemoryId::new(0))),
+        )
+    );
+      static ID: RefCell<IdCell> = RefCell::new(
+        IdCell::init(MEMORY_MANAGER.with(|m| m.borrow().get(MemoryId::new(2))), 0)
+            .expect("Cannot create a  User counter")
+    );
+
 }
 
 /// An error that is returned to the front-end.
@@ -91,17 +108,25 @@ fn recognize(image: Vec<u8>) -> Recognition {
 /// Adds a person with the given name (label) and face (image) for future
 /// face recognition requests.
 #[ic_cdk::update]
-fn add(image: Vec<u8>) -> Addition {
+fn add(label:String, image: Vec<u8>) -> Addition {
 
     //random 256 bit string 
-    let label=generate_label();
+    let name=generate_label();
 
-    let result = match onnx::add(label, image) {
+    let result = match onnx::add(name.clone(), image) {
         Ok(result) => Addition::Ok(result),
         Err(err) => Addition::Err(Error {
             message: err.to_string(),
         }),
     };
+        let id = ID.with(|counter| {
+        let counter_value = *counter.borrow().get();
+        let _ = counter.borrow_mut().set(counter_value + 1);
+        counter_value
+    });
+
+    //save this in stable storage
+    IDENTITIES.with(|db| db.borrow_mut().insert(id, name.clone())) ;
     result
 }
 
