@@ -29,6 +29,8 @@ export interface _SERVICE {
     [Uint8Array | number[]],
     undefined
   >,
+  'challenge' : ActorMethod<[], string>,
+  'check_identity' : ActorMethod<[string], boolean>,
   'clear_face_detection_model_bytes' : ActorMethod<[], undefined>,
   'clear_face_recognition_model_bytes' : ActorMethod<[], undefined>,
   'detect' : ActorMethod<[Uint8Array | number[]], Detection>,
