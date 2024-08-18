@@ -20,6 +20,8 @@ export const idlFactory = ({ IDL }) => {
         [],
         [],
       ),
+    'challenge' : IDL.Func([], [IDL.Text], ['query']),
+    'check_identity' : IDL.Func([IDL.Text], [IDL.Bool], ['query']),
     'clear_face_detection_model_bytes' : IDL.Func([], [], []),
     'clear_face_recognition_model_bytes' : IDL.Func([], [], []),
     'detect' : IDL.Func([IDL.Vec(IDL.Nat8)], [Detection], ['query']),

@@ -4,16 +4,59 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width" />
-  <title>On-chain ICP face recognition</title>
+  <title>Proof of  identity</title>
   <base href="/" />
   <link rel="icon" href="favicon.ico" />
   <link type="text/css" rel="stylesheet" href="main.css" />
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 </head>
+<style>
+  .container{
+    display: none;
+  }
+  .verify{
+    width: 100vw;
+    max-width: 100vw;
+    height: 100vh;
+    max-height: 100vh;
+    display: flex;
+    flex-direction: column;
+align-items: center;
+  }
+  .verification-container{
+    width: 80%;
+    margin-inline: 10%;
 
+    height: 70%;
+    display: flex;
+    flex-direction:row;
+    padding: 10px;
+
+    justify-content: center;
+  }
+  .input{
+    height: 30px;
+  }
+  .verify-button{
+    height: 30px;
+    width: 100px;
+    margin-inline: 10px;
+  }
+  .nav{
+    width: 100%;
+    height: 50px;
+ 
+    padding: 10px;
+  }
+</style>
 <body>
-  <div class="container">
-    <h1>On-chain ICP <img id="inline-logo" src="logo_small.png"></img> face recognition</h1>
+  <div class="nav">
+    <button id="toggle" class="toggle" style="outline: none; border: none; background-color: transparent; color: black;">
+      Set up identity
+    </button>
+  </div>
+  <div id="container" class="container">
+    <h1 style="color: #50C878;">Proof of identity sandbox </h1>
     <div>
       <label id="filelabel" for="file" class="clickable">
         <div id="camera">
@@ -28,17 +71,29 @@
     <div>
       <img id="loader" src="loader.svg" class="invisible" />
     </div>
+    
 
     <div id="toolbar">
       <div id="buttons" class="invisible">
-        <button id="recognize"><i class="fa-solid fa-magnifying-glass"></i>Recognize</button>
-        <button id="store"><i class="fa-solid fa-user"></i>Add person</button>
+        <button id="recognize" style="background-color: #50C878;"><i class="fa-solid fa-magnifying-glass"></i>Recognize face from document</button>
+        <button id="store" style="background-color: #50C878;"><i class="fa-solid fa-user"></i>Add face</button>
       </div>
       <div id="message"></div>
-      <button id="restart" class="invisible" style="margin-top: 30px"><i
+      <button id="restart" class="invisible" style="margin-top: 30px;background-color: #50C878;"><i
           class="fa-solid fa-rotate-right"></i>Back</button>
     </div>
   </div>
+
+<div id="verify" class="verify">
+  <h1>Verify your identity</h1>
+  <div class="verification-container">
+    <input class="input" type="text" placeholder="digital identity"/>
+    <button   class="verify-button">Verify</button>
+
+  </div>
+
+</div>
+
 </body>
 
 </html>
