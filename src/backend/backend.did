@@ -15,6 +15,8 @@ service : () -> {
   add : (text, blob) -> (Addition);
   append_face_detection_model_bytes : (blob) -> ();
   append_face_recognition_model_bytes : (blob) -> ();
+  challenge : () -> (text) query;
+  check_identity : (text) -> (bool) query;
   clear_face_detection_model_bytes : () -> ();
   clear_face_recognition_model_bytes : () -> ();
   detect : (blob) -> (Detection) query;

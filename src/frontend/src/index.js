@@ -10,7 +10,7 @@ window.onload = async () => {
     show("video");
     hide("image");
     hide("canvas");
-  }
+  };
 
   navigator.mediaDevices
     .getUserMedia({ video: true, audio: false })
@@ -26,9 +26,9 @@ window.onload = async () => {
       hide("video");
       hide("canvas");
       console.error(`An error occurred: ${err}`);
-      message("Couldn't start camera, but you can upload photos.")
+      message("Couldn't start camera, but you can upload photos.");
     });
-}
+};
 
 // Returns a DOM element that is currently visible and contains an image.
 function select_visible_element() {
@@ -53,7 +53,7 @@ async function capture_image() {
   let [image, width, height] = select_visible_element();
 
   const canvas = elem("canvas");
-  canvas.width = width
+  canvas.width = width;
   canvas.height = height;
   const context = canvas.getContext("2d");
   context.drawImage(image, 0, 0, width, height);
@@ -61,7 +61,10 @@ async function capture_image() {
   const resized = document.createElement("canvas");
   resized.width = 320;
   resized.height = 240;
-  let scale = Math.min(resized.width / canvas.width, resized.height / canvas.height);
+  let scale = Math.min(
+    resized.width / canvas.width,
+    resized.height / canvas.height
+  );
   width = canvas.width * scale;
   height = canvas.height * scale;
   let x = resized.width / 2 - width / 2;
@@ -78,7 +81,7 @@ async function capture_image() {
 
   hide("video");
   hide("image");
-  show("canvas")
+  show("canvas");
   return [bytes, { scale, x, y }];
 }
 
@@ -97,7 +100,17 @@ async function render(scaling, box) {
   small.height = 160;
   const ctx2 = small.getContext("2d");
   if (ctx2) {
-    ctx2.drawImage(canvas, box.left, box.top, box.right - box.left, box.bottom - box.top, 0, 0, 140, 140);
+    ctx2.drawImage(
+      canvas,
+      box.left,
+      box.top,
+      box.right - box.left,
+      box.bottom - box.top,
+      0,
+      0,
+      140,
+      140
+    );
   }
   let bytes = await serialize(small);
 
@@ -116,7 +129,7 @@ async function render(scaling, box) {
 // This function performs the following steps:
 // 1. Capture the image from the camera stream (or from the local file).
 // 2. Call the backend to detect the bounding box of the face in the image.
-// 3. Call the backend to recognize the face. 
+// 3. Call the backend to recognize the face.
 async function recognize(event) {
   event.preventDefault();
   hide("buttons");
@@ -137,7 +150,9 @@ async function recognize(event) {
     }
     let label = sanitize(result.Ok.label);
     let score = Math.round(result.Ok.score * 100) / 100;
-    message(`${label}, difference=${score}`);
+    message(
+      `The face in the document matched with your face, here is your identity please copy and store it safely, ${label}, difference=${score}`
+    );
   } catch (err) {
     console.error(`An error occurred: ${err}`);
     message(err.toString());
@@ -187,7 +202,7 @@ async function store(event) {
   return false;
 }
 
-// Invoked when a file is selected in the file input element. 
+// Invoked when a file is selected in the file input element.
 // Loads the given file as an image to show to the user.
 async function load_local_image(event) {
   message("");
@@ -217,7 +232,7 @@ function toDataURL(blob) {
     fileReader.readAsDataURL(blob);
     fileReader.onloadend = function () {
       resolve(fileReader.result);
-    }
+    };
   });
 }
 
@@ -260,11 +275,21 @@ function message(m) {
 
 // Returns an PNG image from the canvas.
 function serialize(canvas) {
-  return new Promise((resolve) => canvas.toBlob((blob) => blob.arrayBuffer().then(resolve), "image/png", 0.9));
+  return new Promise((resolve) =>
+    canvas.toBlob((blob) => blob.arrayBuffer().then(resolve), "image/png", 0.9)
+  );
 }
 
 // Sanitizes the name string by filtering out characters that are not letters,
 // numbers, spaces, and dashes.
 function sanitize(name) {
-  return name.match(/[\p{L}\p{N}\s_-]/gu).join('');
+  return name.match(/[\p{L}\p{N}\s_-]/gu).join("");
 }
+
+const container = document.getElementsByClassName("container");
+document.getElementById("toggle").onclick = function () {
+  var container = document.getElementById("container"); // Replace 'container' with your actual container ID
+  container.style.display = "block";
+  var container = document.getElementById("verify"); // Replace 'container' with your actual container ID
+  container.style.display = "none";
+};
