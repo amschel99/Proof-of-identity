@@ -305,17 +305,21 @@ document.getElementById("toggle").onclick = function () {
  const toggleButton= elem("toggle");
  toggleButton.classList.add("opacity-50", "cursor-not-allowed"); // Add opacity and disable cursor style
  toggleButton.disabled = true; // Disable the button
-
+ var  toggleVerify= elem("toggleVerify");
+ toggleVerify.classList.remove("opacity-50", "cursor-not-allowed"); // Add opacity and disable cursor style
+ toggleVerify.disabled = false;
 };
  
 document.getElementById("toggleVerify").onclick = () => {
   var container = document.getElementById("container");
  container.style.display = "none";
  var verify = document.getElementById("verify");
- verify.style.display = "block"
+ verify.style.display = "block";
+ var  toggleVerify= elem("toggleVerify");
+ toggleVerify.classList.add("opacity-50", "cursor-not-allowed"); // Add opacity and disable cursor style
+ toggleVerify.disabled = true;
  const toggleButton= elem("toggle");
  toggleButton.classList.remove("opacity-50", "cursor-not-allowed"); // Add opacity and disable cursor style
- 
  toggleButton.disabled = false; // Disable the button
-  
+
 };
