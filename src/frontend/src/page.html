@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KYC Verification</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen font-sans">
+    <nav class="bg-blue-600 text-white p-4">
+        <h1 class="text-2xl font-bold">KYC Verification System</h1>
+    </nav>
+
+    <main class="container mx-auto mt-8 p-4">
+        <div class="flex justify-center mb-8">
+            <button id="toggleSetup" class="bg-green-500 text-white px-4 py-2 rounded mr-4">Set up identity</button>
+            <button id="toggleVerify" class="bg-yellow-500 text-white px-4 py-2 rounded">Verify identity</button>
+        </div>
+
+        <div id="setupContainer" class="hidden">
+            <h2 class="text-2xl font-bold mb-4 text-center text-green-700">Set Up Your Identity</h2>
+            <div class="max-w-md mx-auto bg-white rounded-lg shadow-md overflow-hidden">
+                <div id="camera" class="relative">
+                    <video id="video" class="w-full h-64 object-cover"></video>
+                    <img id="image" class="w-full h-64 object-cover hidden" alt="Uploaded image">
+                    <canvas id="canvas" class="w-full h-64 object-cover hidden"></canvas>
+                    <input type="file" id="file" class="hidden" accept="image/*">
+                    <label for="file" class="absolute bottom-2 right-2 bg-blue-500 text-white px-2 py-1 rounded cursor-pointer">Upload Photo</label>
+                </div>
+                <div class="p-4">
+                    <div id="buttons" class="flex justify-between mb-4 hidden">
+                        <button id="recognize" class="bg-blue-500 text-white px-4 py-2 rounded">Recognize Face</button>
+                        <button id="store" class="bg-green-500 text-white px-4 py-2 rounded">Add Face</button>
+                    </div>
+                    <div id="message" class="text-center text-gray-700"></div>
+                    <button id="restart" class="w-full bg-gray-300 text-gray-700 px-4 py-2 rounded mt-4 hidden">Restart</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="verifyContainer" class="hidden">
+            <h2 class="text-2xl font-bold mb-4 text-center text-yellow-700">Verify Your Identity</h2>
+            <div class="max-w-md mx-auto bg-white rounded-lg shadow-md overflow-hidden p-4">
+                <input type="text" id="identityInput" placeholder="Enter your identity" class="w-full px-3 py-2 border rounded mb-4">
+                <button id="verifyButton" class="w-full bg-yellow-500 text-white px-4 py-2 rounded">Verify</button>
+                <div id="verifyMessage" class="text-center text-gray-700 mt-4"></div>
+            </div>
+        </div>
+
+        <div id="loader" class="hidden fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50">
+            <div class="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-blue-500"></div>
+        </div>
+    </main>
+
+    <script src="app.js"></script>
+</body>
+</html>
+<div class="border border-blue-500 bg-gray-300">
+    <label id="filelabel" for="file" class="clickable ">
+      <div id="camera" class="relative ">
+          <video id="video" class="w-full h-64 "></video>
+          <img id="image" class="w-full" src="logo_transparent.png"></img>
+
+          <canvas id="canvas" class="w-full h-64  "></canvas> <input id="file" class="file" name="file" type="file" accept="image/png, image/jpeg" />
+         
+      </div>
+     
+      </label>
+  </div>
+  <div id="toolbar" class="p-4">
+    <div id="buttons" class="space-y-2 mb-4 hidden">
+      <button id="recognize" class="w-full bg-green-500 text-white py-2 px-4 rounded flex items-center justify-center">
+        <i class="fa-solid fa-magnifying-glass mr-2"></i>Recognize face from document
+      </button>
+      <button id="store" class="w-full bg-green-500 text-white py-2 px-4 rounded flex items-center justify-center">
+        <i class="fa-solid fa-user mr-2"></i>Add face
+      </button>
+    </div>
+    <div id="message" class="text-center text-gray-700 mb-4"></div>
+    <button id="restart" class="w-full bg-green-500 text-white py-2 px-4 rounded flex items-center justify-center hidden">
+      <i class="fa-solid fa-rotate-right mr-2"></i>Back
+    </button>
+  </div>

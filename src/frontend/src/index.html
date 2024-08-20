@@ -14,7 +14,18 @@
   .container{
     display: none;
   }
-  .verify{
+  /* .verification-container{
+    width: 80%;
+    margin-inline: 10%;
+
+    height: 70%;
+    display: flex;
+    flex-direction:row;
+    padding: 10px;
+
+    justify-content: center;
+  } */
+  /* .verify{
     width: 100vw;
     max-width: 100vw;
     height: 100vh;
@@ -47,42 +58,100 @@ align-items: center;
     height: 50px;
  
     padding: 10px;
-  }
+  } */
 </style>
-<body>
-  <div class="nav">
-    <button id="toggle" class="toggle" style="outline: none; border: none; background-color: transparent; color: black;">
-      Set up identity
-    </button>
-  </div>
-  <div id="container" class="container">
-    <h1 style="color: #50C878;">Proof of identity sandbox </h1>
-    <div>
-      <label id="filelabel" for="file" class="clickable">
-        <div id="camera">
-          <img id="image" src="logo_transparent.png"></img>
-          <video playsinline id="video" class="invisible"></video>
-          <canvas id="canvas" class="invisible"></canvas>
-        </div>
-      </label>
-      <input id="file" class="file" name="file" type="file" accept="image/png, image/jpeg" />
-    </div>
+<body class="w-full bg-gray-100 min-h-screen font-jost ">
 
-    <div>
-      <img id="loader" src="loader.svg" class="invisible" />
+  <nav class="bg-[#1414] text-white p-4 w-full">
+    <h1 class="text-2xl font-bold">KYC Verification System</h1>
+</nav>
+ <main class="w-full flex justify-center flex-col items-center  mx-auto mt-8 p-4"> 
+  <div class="flex items-center justify-center mb-8 flex-row ">
+    <button id="toggle" class="bg-green-500 text-white px-4 py-2 rounded mr-4">Set up identity</button>
+    <button id="toggleVerify" class="bg-yellow-500 text-white px-4 py-2 rounded">Verify identity</button>
+</div>
+
+  <!-- <div class="nav">
+    <button id="toggle" class="toggle" style="outline: none; border: none; background-color: transparent; color: black;">
+      Set up identity more
+    </button>
+  </div> -->
+  <div id="verify" class="verify max-w-md  w-full flex  justify-center items-center ">
+    <h2 class="text-2xl font-bold mb-4 text-center text-yellow-700">Verify Your Identity</h2>
+    <div class="w-full mx-auto bg-white rounded-lg shadow-md overflow-hidden p-4">
+        <input type="text" id="identityInput" placeholder="Enter your identity" class="w-full px-3 py-2 border rounded mb-4">
+        <button id="verifyButton" class="w-full bg-yellow-500 text-white px-4 py-2 rounded">Verify</button>
+        <div id="verifyMessage" class="text-center text-gray-700 mt-4"></div>
     </div>
     
+ </div> 
+ <div id="container" style="margin: 0; width: 100%; padding: 0;" class="hidden max-w-md  mx-auto  flex flex-col justify-center items-center   w-full">
+  <h2 class="text-2xl font-bold mb-6 text-center text-green-700">Set Up Your Identity</h2>
+  <div style="margin: 0; width: 100%; padding: 0;" class="w-full   ">
+    <div style="margin: 0; width: 100%; padding: 0;" class=" w-full">
+      <label id="filelabel" for="file" class="cursor-pointer w-full">
+        <div id="camera" class="relative w-full ">
+           <video playsinline id="video" class="  w-full h-auto sm:h-40 md:h-64 bg-gray-100 rounded-t-lg object-cover invisible"> </video>
+          <video id="video" class="  w-full h-auto sm:h-40 md:h-64 bg-gray-100 rounded-t-lg object-cover invisible"></video>
+          <img id="image" class="w-full h-auto sm:h-40 md:h-64 object-cover rounded-t-lg" src="logo_transparent.png" alt="Preview">
+          <canvas id="canvas" class="w-full h-auto sm:h-40 md:h-64 invisible"></canvas>
+          <input id="file" class="hidden" name="file" type="file" accept="image/png, image/jpeg">
+        </div>
+      </label>
+      <div>
+        <img id="loader" src="loader.svg" class="invisible" />
+      </div> 
 
-    <div id="toolbar">
-      <div id="buttons" class="invisible">
-        <button id="recognize" style="background-color: #50C878;"><i class="fa-solid fa-magnifying-glass"></i>Recognize face from document</button>
-        <button id="store" style="background-color: #50C878;"><i class="fa-solid fa-user"></i>Add face</button>
+      <div id="toolbar" class=" w-full p-4 flex flex-col space-y-4">
+     
+        <div id="buttons" class="  invisible flex flex-col md:flex-row ">
+          <button id="recognize" class="  w-full sm:w-auto py-2 px-4 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors">
+            <i class="fa-solid fa-magnifying-glass mr-2"></i>Recognize face from document
+          </button>
+          <button id="store" class=" w-full sm:w-auto py-2 px-4 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors">
+            <i class="fa-solid fa-user mr-2"></i>Add face
+          </button>
+        </div>
+        
+        <div id="message" class="block w-full  text-red-500  break-words "></div>
+        <button id="restart" class=" invisible w-full py-2 px-4 bg-green-500 text-white rounded-lg  mt-6 hover:bg-green-600 transition-colors">
+          <i class="fa-solid fa-rotate-right mr-2"></i>Back
+        </button>
       </div>
-      <div id="message"></div>
-      <button id="restart" class="invisible" style="margin-top: 30px;background-color: #50C878;"><i
-          class="fa-solid fa-rotate-right"></i>Back</button>
     </div>
   </div>
+</div>
+
+<!-- <div id="container" class="container">
+  <h1 style="color: #50C878;">Proof of identity sandbox </h1>
+  <div>
+    <label id="filelabel" for="file" class="clickable">
+      <div id="camera">
+        <img id="image" src="logo_transparent.png"></img>
+        <video playsinline id="video" class="invisible"></video>
+        <canvas id="canvas" class="invisible"></canvas>
+      </div>
+    </label>
+    <input id="file" class="file" name="file" type="file" accept="image/png, image/jpeg" />
+  </div> 
+
+  <div>
+    <img id="loader" src="loader.svg" class="invisible" />
+  </div>
+  
+
+  <div id="toolbar">
+    <div id="buttons" class="invisible">
+      <button id="recognize" style="background-color: #50C878;"><i class="fa-solid fa-magnifying-glass"></i>Recognize face from document</button>
+      <button id="store" style="background-color: #50C878;"><i class="fa-solid fa-user"></i>Add face</button>
+    </div>
+    <div id="message"></div>
+    <button id="restart" class="invisible" style="margin-top: 30px;background-color: #50C878;"><i
+        class="fa-solid fa-rotate-right"></i>Back</button>
+  </div>
+</div>
+
+
 
 <div id="verify" class="verify">
   <h1>Verify your identity</h1>
@@ -92,7 +161,8 @@ align-items: center;
 
   </div>
 
-</div>
+</div> -->
+</main>
 
 </body>
 

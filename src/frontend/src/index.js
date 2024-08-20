@@ -1,4 +1,5 @@
 import { backend } from "../../declarations/backend";
+import './styles.css';
 
 window.onload = async () => {
   elem("recognize").onclick = recognize;
@@ -286,10 +287,27 @@ function sanitize(name) {
   return name.match(/[\p{L}\p{N}\s_-]/gu).join("");
 }
 
-const container = document.getElementsByClassName("container");
+const container = document.getElementById("container");
+
 document.getElementById("toggle").onclick = function () {
-  var container = document.getElementById("container"); // Replace 'container' with your actual container ID
-  container.style.display = "block";
-  var container = document.getElementById("verify"); // Replace 'container' with your actual container ID
-  container.style.display = "none";
+  var container = document.getElementById("container"); // Get the first container element
+  var styles = {
+    display: container.style.display === "none" ? "block" : "none",
+   
+  };
+
+  // Apply the styles using a loop
+  Object.assign(container.style, styles);
+
+  var verify = document.getElementById("verify"); // Get the verify element
+  verify.style.display = "none"; // Hide the verify element
+};
+ 
+document.getElementById("toggleVerify").onclick = () => {
+  var container = document.getElementById("container");
+ container.style.display = "none";
+ var verify = document.getElementById("verify");
+ verify.style.display = "block"
+
+  
 };
