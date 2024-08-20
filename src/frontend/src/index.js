@@ -289,37 +289,37 @@ function sanitize(name) {
 
 const container = document.getElementById("container");
 
-document.getElementById("toggle").onclick = function () {
-  var container = document.getElementById("container"); // Get the first container element
-  var verify = document.getElementById("verify"); 
-  var styles = {
-    display:  "block" 
-   
-  };
+// Function to toggle visibility between two elements
+function toggleVisibility(showId, hideId) {
+  const showElement = elem(showId);
+  const hideElement = elem(hideId);
 
-  // Apply the styles using a loop
-  Object.assign(container.style, styles);
-// Get the verify element
- verify.style.display="none"
+  showElement.style.display = "block";
+  hideElement.style.display = "none";
+}
 
- const toggleButton= elem("toggle");
- toggleButton.classList.add("opacity-50", "cursor-not-allowed"); // Add opacity and disable cursor style
- toggleButton.disabled = true; // Disable the button
- var  toggleVerify= elem("toggleVerify");
- toggleVerify.classList.remove("opacity-50", "cursor-not-allowed"); // Add opacity and disable cursor style
- toggleVerify.disabled = false;
+// Function to manage button state (disable/enable)
+function setButtonState(buttonId, disabled) {
+  const button = elem(buttonId);
+
+  if (disabled) {
+    button.classList.add("opacity-50", "cursor-not-allowed");
+  } else {
+    button.classList.remove("opacity-50", "cursor-not-allowed");
+  }
+  button.disabled = disabled;
+}
+
+// Event listener for the "toggle" button
+elem("toggle").onclick = function () {
+  toggleVisibility("container", "verify");
+  setButtonState("toggle", true);
+  setButtonState("toggleVerify", false);
 };
- 
-document.getElementById("toggleVerify").onclick = () => {
-  var container = document.getElementById("container");
- container.style.display = "none";
- var verify = document.getElementById("verify");
- verify.style.display = "block";
- var  toggleVerify= elem("toggleVerify");
- toggleVerify.classList.add("opacity-50", "cursor-not-allowed"); // Add opacity and disable cursor style
- toggleVerify.disabled = true;
- const toggleButton= elem("toggle");
- toggleButton.classList.remove("opacity-50", "cursor-not-allowed"); // Add opacity and disable cursor style
- toggleButton.disabled = false; // Disable the button
 
+// Event listener for the "toggleVerify" button
+elem("toggleVerify").onclick = () => {
+  toggleVisibility("verify", "container");
+  setButtonState("toggleVerify", true);
+  setButtonState("toggle", false);
 };
