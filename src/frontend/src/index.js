@@ -291,16 +291,21 @@ const container = document.getElementById("container");
 
 document.getElementById("toggle").onclick = function () {
   var container = document.getElementById("container"); // Get the first container element
+  var verify = document.getElementById("verify"); 
   var styles = {
-    display: container.style.display === "none" ? "block" : "none",
+    display:  "block" 
    
   };
 
   // Apply the styles using a loop
   Object.assign(container.style, styles);
+// Get the verify element
+ verify.style.display="none"
 
-  var verify = document.getElementById("verify"); // Get the verify element
-  verify.style.display = "none"; // Hide the verify element
+ const toggleButton= elem("toggle");
+ toggleButton.classList.add("opacity-50", "cursor-not-allowed"); // Add opacity and disable cursor style
+ toggleButton.disabled = true; // Disable the button
+
 };
  
 document.getElementById("toggleVerify").onclick = () => {
@@ -308,6 +313,9 @@ document.getElementById("toggleVerify").onclick = () => {
  container.style.display = "none";
  var verify = document.getElementById("verify");
  verify.style.display = "block"
-
+ const toggleButton= elem("toggle");
+ toggleButton.classList.remove("opacity-50", "cursor-not-allowed"); // Add opacity and disable cursor style
+ 
+ toggleButton.disabled = false; // Disable the button
   
 };
