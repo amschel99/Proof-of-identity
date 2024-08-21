@@ -4,6 +4,7 @@ const webpack = require("webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const TerserPlugin = require("terser-webpack-plugin");
 const CopyPlugin = require("copy-webpack-plugin");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 const isDevelopment = process.env.NODE_ENV !== "production";
 
@@ -44,16 +45,33 @@ module.exports = {
   // webpack configuration. For example, if you are using React
   // modules and CSS as described in the "Adding a stylesheet"
   // tutorial, uncomment the following lines:
-  // module: {
-  //  rules: [
-  //    { test: /\.(ts|tsx|jsx)$/, loader: "ts-loader" },
-  //    { test: /\.css$/, use: ['style-loader','css-loader'] }
-  //  ]
-  // },
+  module: {
+    rules: [
+      {
+        test: /\.css$/,
+        use: [
+          isDevelopment ? 'style-loader' : MiniCssExtractPlugin.loader,
+    'css-loader',
+    'postcss-loader', // Add the PostCSS loader
+        ],
+      },
+      // ... other rules
+    ],
+  },
   plugins: [
     new HtmlWebpackPlugin({
       template: path.join(__dirname, frontend_entry),
+      minify: {
+        removeComments: true,
+        collapseWhitespace: true,
+        removeAttributeQuotes: true,
+        conservativeCollapse: true,
+      },
       cache: false,
+    }),  
+    new MiniCssExtractPlugin({
+      filename: "./src/frontend/src/styles.css",
+      // path: path.join(__dirname,'src',frontendDirectory,'src'),
     }),
     new webpack.EnvironmentPlugin([
       ...Object.keys(process.env).filter((key) => {
@@ -89,8 +107,9 @@ module.exports = {
       },
     },
     static: path.resolve(__dirname, "src", frontendDirectory, "assets"),
+    
     hot: true,
-    watchFiles: [path.resolve(__dirname, "src", frontendDirectory)],
+    watchFiles: [path.resolve(__dirname, "src", frontendDirectory), path.resolve(__dirname, "src", frontendDirectory, 'src',"**/*.css")] ,// Ensure CSS files are watched 
     liveReload: true,
   },
 };
