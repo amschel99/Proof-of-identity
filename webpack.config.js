@@ -11,19 +11,26 @@ const isDevelopment = process.env.NODE_ENV !== "production";
 const frontendDirectory = "frontend";
 
 const frontend_entry = path.join("src", frontendDirectory, "src", "index.html");
+const home_page= path.join("src", frontendDirectory, "src", "home.html");
 
 module.exports = {
   target: "web",
   mode: isDevelopment ? "development" : "production",
   entry: {
     // The frontend.entrypoint points to the HTML file for this build, so we need
-    // to replace the extension to `.js`.
-    index: path.join(__dirname, frontend_entry).replace(/\.html$/, ".js"),
+  
+    index: path.join(__dirname, "src", frontendDirectory, "src", "index.js"),
+  ocr: path.join(__dirname, "src", frontendDirectory, "src", "Ocr", "ocr.js")
   },
   devtool: isDevelopment ? "source-map" : false,
   optimization: {
     minimize: !isDevelopment,
     minimizer: [new TerserPlugin()],
+    runtimeChunk: 'single',
+    splitChunks: {
+      chunks: 'all',
+      name: false,
+    },
   },
   resolve: {
     extensions: [".js", ".ts", ".jsx", ".tsx"],
@@ -36,7 +43,7 @@ module.exports = {
     },
   },
   output: {
-    filename: "index.js",
+    filename: '[name].bundle.js',
     path: path.join(__dirname, "dist", frontendDirectory),
   },
 
@@ -55,12 +62,30 @@ module.exports = {
     'postcss-loader', // Add the PostCSS loader
         ],
       },
-      // ... other rules
+      {
+        test: /\.worker\.js$/,
+        use: { loader: 'worker-loader' }
+      }
     ],
   },
   plugins: [
     new HtmlWebpackPlugin({
       template: path.join(__dirname, frontend_entry),
+      filename: 'index.html',
+      chunks: ['index'],
+
+      minify: {
+        removeComments: true,
+        collapseWhitespace: true,
+        removeAttributeQuotes: true,
+        conservativeCollapse: true,
+      },
+      cache: false,
+    }),  
+    new HtmlWebpackPlugin({
+      template: path.join(__dirname, "src", frontendDirectory, "src","Ocr", "ocr.html"),
+      filename: 'ocr.html',
+      chunks: ['ocr'],
       minify: {
         removeComments: true,
         collapseWhitespace: true,
@@ -107,7 +132,6 @@ module.exports = {
       },
     },
     static: path.resolve(__dirname, "src", frontendDirectory, "assets"),
-    
     hot: true,
     watchFiles: [path.resolve(__dirname, "src", frontendDirectory), path.resolve(__dirname, "src", frontendDirectory, 'src',"**/*.css")] ,// Ensure CSS files are watched 
     liveReload: true,
