@@ -11,6 +11,7 @@ const isDevelopment = process.env.NODE_ENV !== "production";
 const frontendDirectory = "frontend";
 
 const frontend_entry = path.join("src", frontendDirectory, "src", "index.html");
+const home_page= path.join("src", frontendDirectory, "src", "home.html");
 
 module.exports = {
   target: "web",
@@ -18,7 +19,8 @@ module.exports = {
   entry: {
     // The frontend.entrypoint points to the HTML file for this build, so we need
     // to replace the extension to `.js`.
-    index: path.join(__dirname, frontend_entry).replace(/\.html$/, ".js"),
+    // index: path.join(__dirname, frontend_entry).replace(/\.html$/, ".js"),
+    home: path.join(__dirname, home_page).replace(/\.html$/, ".js"),
     ocr: path.join(__dirname, "src", frontendDirectory, "src", "Ocr","ocr.js")
   },
   devtool: isDevelopment ? "source-map" : false,
@@ -64,7 +66,9 @@ module.exports = {
   },
   plugins: [
     new HtmlWebpackPlugin({
-      template: path.join(__dirname, frontend_entry),
+      template: path.join(__dirname, home_page),
+      filename: 'home.html',
+      chunks: ['home'],
       minify: {
         removeComments: true,
         collapseWhitespace: true,

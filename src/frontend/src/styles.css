@@ -20,4 +20,83 @@ input:focus {
     line-height: 1.6;
    max-width: 100vw;
   }
-  
+
+  .container {
+    margin: 0 auto;
+    width: 100%;
+}
+
+  #camera {
+    position: relative;
+    margin-top: 10px;
+    height: 320px;
+    cursor: pointer;
+    width: 100%;
+    
+}
+
+#camera>video,
+#camera>canvas,
+#camera>img {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    border: 1px solid #2563eb;
+    max-width: 400px;
+    width: auto;
+    height: 320px;
+    border-radius: 0.6rem;
+}
+
+
+.invisible {
+    visibility: hidden;
+}
+ #toolbar {
+    position: relative;
+    margin-top: 30px;
+
+}
+#buttons {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    display: flex;
+    flex-direction: row;
+    gap: 2rem;
+    justify-content: center;
+} 
+
+@keyframes astrodance {
+    0% {
+        transform: translate(-50%, -50%) rotate(-20deg)
+    }
+
+    50% {
+        transform: translate(-50%, -50%) rotate(10deg)
+    }
+
+    to {
+        transform: translate(-50%, -50%) rotate(-20deg)
+    }
+}
+
+#loader {
+    width: 32px;
+    margin-top: -64px;
+    margin-left: 32px;
+    display: block;
+    -webkit-user-select: none;
+    user-select: none;
+    animation-name: astrodance;
+    animation-duration: 5s;
+    animation-iteration-count: infinite;
+    animation-timing-function: ease-in-out;
+    border: none;
+    background-color: transparent;
+}
+#inline-logo {
+  height: 1em;
+  margin-left: 0.2ch;
+  margin-right: 1ch;
+}
