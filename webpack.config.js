@@ -18,15 +18,19 @@ module.exports = {
   mode: isDevelopment ? "development" : "production",
   entry: {
     // The frontend.entrypoint points to the HTML file for this build, so we need
-    // to replace the extension to `.js`.
-    index: path.join(__dirname, frontend_entry).replace(/\.html$/, ".js"),
-    // home: path.join(__dirname, home_page).replace(/\.html$/, ".js"),
-    ocr: path.join(__dirname, "src", frontendDirectory, "src", "Ocr","ocr.js")
+  
+    index: path.join(__dirname, "src", frontendDirectory, "src", "index.js"),
+  ocr: path.join(__dirname, "src", frontendDirectory, "src", "Ocr", "ocr.js")
   },
   devtool: isDevelopment ? "source-map" : false,
   optimization: {
     minimize: !isDevelopment,
     minimizer: [new TerserPlugin()],
+    runtimeChunk: 'single',
+    splitChunks: {
+      chunks: 'all',
+      name: false,
+    },
   },
   resolve: {
     extensions: [".js", ".ts", ".jsx", ".tsx"],
@@ -67,7 +71,9 @@ module.exports = {
   plugins: [
     new HtmlWebpackPlugin({
       template: path.join(__dirname, frontend_entry),
-     
+      filename: 'index.html',
+      chunks: ['index'],
+
       minify: {
         removeComments: true,
         collapseWhitespace: true,
@@ -126,7 +132,6 @@ module.exports = {
       },
     },
     static: path.resolve(__dirname, "src", frontendDirectory, "assets"),
-    
     hot: true,
     watchFiles: [path.resolve(__dirname, "src", frontendDirectory), path.resolve(__dirname, "src", frontendDirectory, 'src',"**/*.css")] ,// Ensure CSS files are watched 
     liveReload: true,

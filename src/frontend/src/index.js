@@ -22,40 +22,54 @@ document.addEventListener("DOMContentLoaded", function() {
     animateValue("documents", 0, 500000, 1100);
     animateValue("countries", 0, 195, 1000);
   });
-  
-// const container = document.getElementById("container");
 
-// // Function to toggle visibility between two elements
-// function toggleVisibility(showId, hideId) {
-//   const showElement = elem(showId);
-//   const hideElement = elem(hideId);
 
-//   showElement.style.display = "block";
-//   hideElement.style.display = "none";
-// }
+  document.addEventListener('DOMContentLoaded', function() {
+    const mobileMenuButton = document.getElementById('mobile-menu-button');
+    const mobileMenu = document.getElementById('mobile-menu-2');
+    const openIcon = mobileMenuButton.querySelector('svg:not(.hidden)');
+    const closeIcon = mobileMenuButton.querySelector('svg.hidden');
+    
+    function toggleIcons(show) {
+        if (show) {
+            openIcon.classList.add('hidden');
+            closeIcon.classList.remove('hidden');
+        } else {
+            openIcon.classList.remove('hidden');
+            closeIcon.classList.add('hidden');
+        }
+    }
 
-// // Function to manage button state (disable/enable)
-// function setButtonState(buttonId, disabled) {
-//   const button = elem(buttonId);
+    function closeMobileMenu() {
+        mobileMenu.classList.add('hidden');
+        mobileMenuButton.setAttribute('aria-expanded', 'false');
+        toggleIcons(false);
+    }
 
-//   if (disabled) {
-//     button.classList.add("opacity-50", "cursor-not-allowed");
-//   } else {
-//     button.classList.remove("opacity-50", "cursor-not-allowed");
-//   }
-//   button.disabled = disabled;
-// }
+    function toggleMobileMenu() {
+        const isExpanded = mobileMenu.classList.toggle('hidden');
+        mobileMenuButton.setAttribute('aria-expanded', !isExpanded);
+        toggleIcons(!isExpanded);
+    }
 
-// // Event listener for the "toggle" button
-// elem("toggle").onclick = function () {
-//   toggleVisibility("container", "verify");
-//   setButtonState("toggle", true);
-//   setButtonState("toggleVerify", false);
-// };
+    mobileMenuButton.addEventListener('click', function(event) {
+        event.stopPropagation();
+        toggleMobileMenu();
+    });
 
-// // Event listener for the "toggleVerify" button
-// elem("toggleVerify").onclick = () => {
-//   toggleVisibility("verify", "container");
-//   setButtonState("toggleVerify", true);
-//   setButtonState("toggle", false);
-// };
+    // Close menu when clicking on a menu item
+    const menuItems = mobileMenu.querySelectorAll('a');
+    menuItems.forEach(item => {
+        item.addEventListener('click', closeMobileMenu);
+    });
+
+    // Close menu when clicking outside
+    document.addEventListener('click', function(event) {
+        const isClickInsideMenu = mobileMenu.contains(event.target);
+        const isClickOnMenuButton = mobileMenuButton.contains(event.target);
+        if (!isClickInsideMenu && !isClickOnMenuButton && !mobileMenu.classList.contains('hidden')) {
+            closeMobileMenu();
+        }
+    });
+});
+
