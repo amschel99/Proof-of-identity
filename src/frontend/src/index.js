@@ -1,7 +1,28 @@
 // import { backend } from "../../declarations/backend";
 import './styles.css';
 
-
+document.addEventListener("DOMContentLoaded", function() {
+    function animateValue(id, start, end, duration) {
+      const element = document.getElementById(id);
+      const range = end - start;
+      const increment = Math.ceil(range / (duration / 20)); // Faster updates
+      let current = start;
+      
+      const timer = setInterval(() => {
+        current += increment;
+        element.textContent = current.toLocaleString() + "+";
+        if (current >= end) {
+          clearInterval(timer);
+          element.textContent = end.toLocaleString() + "+"; // Ensure the final value
+        }
+      }, 50); // Update every 50ms
+    }
+  
+    animateValue("users", 0, 250000, 1100);  // 1.5s animation
+    animateValue("documents", 0, 500000, 1100);
+    animateValue("countries", 0, 195, 1000);
+  });
+  
 // const container = document.getElementById("container");
 
 // // Function to toggle visibility between two elements
