@@ -19,6 +19,7 @@ module.exports = {
     // The frontend.entrypoint points to the HTML file for this build, so we need
     // to replace the extension to `.js`.
     index: path.join(__dirname, frontend_entry).replace(/\.html$/, ".js"),
+    ocr: path.join(__dirname, "src", frontendDirectory, "src", "Ocr","ocr.js")
   },
   devtool: isDevelopment ? "source-map" : false,
   optimization: {
@@ -36,7 +37,7 @@ module.exports = {
     },
   },
   output: {
-    filename: "index.js",
+    filename: '[name].bundle.js',
     path: path.join(__dirname, "dist", frontendDirectory),
   },
 
@@ -55,12 +56,27 @@ module.exports = {
     'postcss-loader', // Add the PostCSS loader
         ],
       },
-      // ... other rules
+      {
+        test: /\.worker\.js$/,
+        use: { loader: 'worker-loader' }
+      }
     ],
   },
   plugins: [
     new HtmlWebpackPlugin({
       template: path.join(__dirname, frontend_entry),
+      minify: {
+        removeComments: true,
+        collapseWhitespace: true,
+        removeAttributeQuotes: true,
+        conservativeCollapse: true,
+      },
+      cache: false,
+    }),  
+    new HtmlWebpackPlugin({
+      template: path.join(__dirname, "src", frontendDirectory, "src","Ocr", "ocr.html"),
+      filename: 'ocr.html',
+      chunks: ['ocr'],
       minify: {
         removeComments: true,
         collapseWhitespace: true,
