@@ -288,6 +288,11 @@ function sanitize(name) {
   return name.match(/[\p{L}\p{N}\s_-]/gu).join("");
 }
 
+
+
+
+////////////ocr
+
 class Stepper {
   constructor() {
     console.log('Stepper initialized');
@@ -302,11 +307,11 @@ class Stepper {
 
   initEventListeners() {
     console.log('Initializing event listeners');
-    const step1Next = document.getElementById('step-1-next');
-    const step2Prev = document.getElementById('step-2-prev');
-    const step2Next = document.getElementById('step-2-next');
-    const step3Prev = document.getElementById('step-3-prev');
-    const step3Submit = document.getElementById('step-3-submit');
+    const step1Next = elem('step-1-next');
+    const step2Prev = elem('step-2-prev');
+    const step2Next = elem('step-2-next');
+    const step3Prev = elem('step-3-prev');
+    const step3Submit = elem('step-3-submit');
 
     if (step1Next) step1Next.addEventListener('click', (e) => this.handleStep1Next(e));
     if (step2Prev) step2Prev.addEventListener('click', () => this.goToStep(1));
@@ -323,16 +328,16 @@ class Stepper {
   }
 
   initOCR() {
-    const idDocumentInput = document.getElementById('idDocument');
-    const dropzoneContent = document.getElementById('dropzone-content');
+    const idDocumentInput = elem('idDocument');
+    const dropzoneContent = elem('dropzone-content');
+    const backzoneContent = elem('backDoc-content');
+ const backDocumentInput=elem('dropzone-file');
 
     idDocumentInput.addEventListener('change', (event) => {
-      const nextButton = document.getElementById('step-1-next');
-      const errorMessage = document.getElementById('error-message');
-      const dropzoneLabel = document.getElementById('dropzone-label');
+     
       const file = event.target.files[0];
       if (file) {
-        this.hideError(errorMessage,dropzoneLabel)
+       this.clear();
         const reader = new FileReader();
         reader.onload = function(e) {
           dropzoneContent.innerHTML = `<img src="${e.target.result}" class="h-64 max-w-full w-auto object-contain  " />`;
@@ -341,16 +346,30 @@ class Stepper {
         reader.readAsDataURL(file);
       }
     });
+
+    backDocumentInput.addEventListener('change',(event)=>{
+      const file= event.target.files[0];
+      if (file){
+   this.clear();
+   const reader = new FileReader();
+   reader.onload = function(e) {
+    backzoneContent.innerHTML = `<img src="${e.target.result}" class="h-64 max-w-full w-auto object-contain  " />`;
+     
+   }
+   reader.readAsDataURL(file);
+ }
+
+    })
   }
 
   async handleStep1Next(event) {
     event.preventDefault();
-    const idDocumentInput = document.getElementById('idDocument');
-    const file = idDocumentInput.files[0];
-    const errorMessage = document.getElementById('error-message');
-    const dropzoneLabel = document.getElementById('dropzone-label');
-    const nextButton = document.getElementById('step-1-next');
-    const nameInput = document.getElementById('name');
+    const idDocumentInput = elem('idDocument');
+    const backDocumentInput=elem('dropzone-file');
+    const docFrontPage = idDocumentInput.files[0];
+    const docBackPage = backDocumentInput.files[0];
+    const nextButton = elem('step-1-next');
+    const nameInput = elem('name');
     const providedName = nameInput.value.trim();
   
     if (!providedName) {
@@ -358,15 +377,19 @@ class Stepper {
       return;
     }
 
-    if (!file) {
-      this.showError('Please upload an ID document.');
+    if (!docFrontPage ) {
+      this.showError('Please upload Front document.');
+      return;
+    }
+    if(!docBackPage){
+      this.showError('Please upload a Back document.');
       return;
     }
 
     this.showLoading(nextButton);
 
     try {
-      const { data } = await Tesseract.recognize(file, 'eng', {
+      const { data } = await Tesseract.recognize(docFrontPage, 'eng', {
         logger: (m) => console.log(m)
       });
       
@@ -375,7 +398,7 @@ class Stepper {
       
       if (extractedName) {
         // Name matched, proceed to next step
-        this.hideError(errorMessage,dropzoneLabel);
+      this.clear();
         this.goToStep(2);
       } else {
         // Provide a generic error message without revealing details
@@ -440,18 +463,33 @@ class Stepper {
   
 
   showError(message) {
-    const errorMessage = document.getElementById('error-message');
-    const dropzoneLabel = document.getElementById('dropzone-label');
+    const errorMessage = elem('error-message');
+    const backErrorMessage = elem('back-error-message');
+    const dropzoneLabel = elem('dropzone-label');
+    const backzoneLabel = elem('back-label');
     errorMessage.textContent = message;
+    backErrorMessage.textContent = message;
     errorMessage.style.display = 'block';
+    backErrorMessage.style.display = 'block';
     dropzoneLabel.classList.add('dark:border','dark:border-red-500');
+    backzoneLabel.classList.add('dark:border','dark:border-red-500');
   }
 
-  hideError(errorMessage, dropzoneLabel,) {
-    errorMessage.textContent = "";
-    errorMessage.style.display = 'none';
-    dropzoneLabel.classList.remove('dark:border','dark:border-red-500');
-  }
+clear(){
+  const errorMessage = elem('error-message');
+  const backErrorMessage = elem('back-error-message');
+  const dropzoneLabel = elem('dropzone-label');
+  const backzoneLabel = elem('back-label');
+  errorMessage.textContent = "";
+  errorMessage.style.display = 'none';
+  dropzoneLabel.classList.remove('dark:border','dark:border-red-500');
+
+  backErrorMessage.textContent = "";
+  backErrorMessage .style.display = 'none';
+  backzoneLabel.classList.remove('dark:border','dark:border-red-500');
+
+}
+ 
 
   showLoading(button) {
     button.innerHTML = '<span class=" flex justify-center items-center flex-row gap-2 "> <svg class="animate-spin h-5 w-5 mr-3" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> <span> Processing...<span> </span>';

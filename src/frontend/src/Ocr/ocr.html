@@ -175,10 +175,12 @@
                     >Back page.</label
                   >
                   <label
+                  id="back-label"
                     for="dropzone-file"
                     class="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600"
                   >
                     <div
+                    id="backDoc-content"
                       class="flex flex-col items-center justify-center pt-5 pb-6"
                     >
                       <svg
@@ -204,8 +206,9 @@
                         SVG, PNG, JPG or GIF (MAX. 800x400px)
                       </p>
                     </div>
-                    <input id="dropzone-file" type="file" class="hidden" />
+                    <input id="dropzone-file" type="file" class="hidden" accept="image/*" />
                   </label>
+                  <p id="back-error-message" class="mt-2 text-sm text-red-600 dark:text-red-500" style="display: none;"></p>
                 </div>
               </div>
               <button type="button" id="step-1-next" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center bg-blue-600 hover:bg-blue-700 focus:ring-blue-800">
